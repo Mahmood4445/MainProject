@@ -1,5 +1,14 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 
+// Interface for the Review data from API
+interface Review {
+  id: number;
+  author_name: string;
+  rating: number;
+  text: string;
+  created_at: string;
+}
+
 const Reviews = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
@@ -8,56 +17,87 @@ const Reviews = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const reviews = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      company: "TechCorp Solutions",
-      rating: 5,
-      review: "GoEasyTrip has revolutionized our corporate travel management. The seamless integration and 24/7 support have made booking business trips incredibly efficient.",
-      avatar: "👩‍💼"
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      company: "Global Airlines Inc.",
-      rating: 5,
-      review: "Outstanding B2B solutions! The technology platform is robust and the pricing is highly competitive. Our partnership has been incredibly successful.",
-      avatar: "👨‍✈️"
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      company: "TravelPro Agency",
-      rating: 5,
-      review: "The best travel technology partner we've worked with. Their API integration is flawless and the customer service is exceptional.",
-      avatar: "👩‍💻"
-    },
-    {
-      id: 4,
-      name: "David Thompson",
-      company: "Corporate Travel Plus",
-      rating: 5,
-      review: "GoEasyTrip's platform has streamlined our entire booking process. The real-time availability and competitive rates are game-changers.",
-      avatar: "👨‍💼"
-    },
-    {
-      id: 5,
-      name: "Lisa Wang",
-      company: "Innovation Travel",
-      rating: 5,
-      review: "Incredible support team and cutting-edge technology. They've helped us scale our business significantly with their reliable solutions.",
-      avatar: "👩‍🎓"
-    },
-    {
-      id: 6,
-      name: "Robert Kim",
-      company: "Elite Travel Services",
-      rating: 5,
-      review: "The most reliable travel technology platform we've used. Their commitment to innovation and customer success is outstanding.",
-      avatar: "👨‍🔬"
-    }
-  ];
+  // State for API data
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // State for expanded reviews
+  const [expandedReviews, setExpandedReviews] = useState<Set<number>>(new Set());
+
+  // Function to toggle review expansion
+  const toggleReviewExpansion = (reviewId: number) => {
+    setExpandedReviews(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(reviewId)) {
+        newSet.delete(reviewId);
+      } else {
+        newSet.add(reviewId);
+      }
+      return newSet;
+    });
+  };
+
+  // Function to truncate text
+  const truncateText = (text: string, maxLength: number = 150) => {
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength).trim() + '...';
+  };
+
+  // Fetch reviews from Django API
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        
+        const response = await fetch('http://localhost:8000/api/reviews/');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        
+        // Handle pagination if Django returns paginated results
+        const reviewsData = data.results || data;
+        setReviews(reviewsData);
+        
+      } catch (err) {
+        console.error('Error fetching reviews:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch reviews');
+        
+        // Fallback to hardcoded reviews if API fails
+        setReviews([
+          {
+            id: 1,
+            author_name: "Sarah Johnson",
+            rating: 5,
+            text: "GoEasyTrip has revolutionized our corporate travel management. The seamless integration and 24/7 support have made booking business trips incredibly efficient.",
+            created_at: new Date().toISOString()
+          },
+          {
+            id: 2,
+            author_name: "Michael Chen",
+            rating: 5,
+            text: "Outstanding B2B solutions! The technology platform is robust and the pricing is highly competitive. Our partnership has been incredibly successful.",
+            created_at: new Date().toISOString()
+          },
+          {
+            id: 3,
+            author_name: "Emily Rodriguez",
+            rating: 5,
+            text: "The best travel technology partner we've worked with. Their API integration is flawless and the customer service is exceptional.",
+            created_at: new Date().toISOString()
+          }
+        ]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
 
   // Auto-scroll functionality with infinite forward-only loop
   useEffect(() => {
@@ -160,7 +200,23 @@ const Reviews = () => {
           </h2>
         </div>
 
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="text-white text-xl">Loading reviews...</div>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <div className="text-white text-xl">Error: {error}</div>
+            <div className="text-blue-200 text-sm mt-2">Showing fallback reviews</div>
+          </div>
+        )}
+
         {/* Reviews Container with Side Peek */}
+        {!isLoading && !error && reviews.length > 0 && (
         <div className="relative max-w-7xl mx-auto">
           {/* Smooth Scrolling Reviews Container */}
           <div 
@@ -187,23 +243,31 @@ const Reviews = () => {
                   data-aos="fade-up"
                   data-aos-delay={index * 100}
                 >
-                  <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 text-center max-w-4xl mx-auto">
+                  <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 text-center max-w-4xl mx-auto min-h-[300px] flex flex-col justify-between">
                     {/* Rating Stars */}
                     <div className="flex justify-center mb-4">
                       {renderStars(review.rating)}
                     </div>
                     
                     {/* Review Text */}
-                    <blockquote className="text-lg lg:text-xl text-gray-700 mb-6 leading-relaxed italic">
-                      "{review.review}"
-                    </blockquote>
+                    <div className="flex-grow">
+                      <blockquote className="text-lg lg:text-xl text-gray-700 leading-relaxed italic mb-3">
+                        "{expandedReviews.has(review.id) ? review.text : truncateText(review.text)}"
+                      </blockquote>
+                      {review.text.length > 150 && (
+                        <button
+                          onClick={() => toggleReviewExpansion(review.id)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200"
+                        >
+                          {expandedReviews.has(review.id) ? 'Show Less' : 'Show More'}
+                        </button>
+                      )}
+                    </div>
                     
                     {/* Reviewer Info */}
                     <div className="flex items-center justify-center space-x-3">
-                      <div className="text-3xl">{review.avatar}</div>
                       <div className="text-left">
-                        <h4 className="font-bold text-blue-950 text-base">{review.name}</h4>
-                        <p className="text-blue-600 text-sm">{review.company}</p>
+                        <h4 className="font-bold text-blue-950 text-base">{review.author_name}</h4>
                       </div>
                     </div>
                   </div>
@@ -218,23 +282,31 @@ const Reviews = () => {
                   data-aos="fade-up"
                   data-aos-delay={index * 100}
                 >
-                  <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 text-center max-w-4xl mx-auto">
+                  <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 text-center max-w-4xl mx-auto min-h-[300px] flex flex-col justify-between">
                     {/* Rating Stars */}
                     <div className="flex justify-center mb-4">
                       {renderStars(review.rating)}
                     </div>
                     
                     {/* Review Text */}
-                    <blockquote className="text-lg lg:text-xl text-gray-700 mb-6 leading-relaxed italic">
-                      "{review.review}"
-                    </blockquote>
+                    <div className="flex-grow">
+                      <blockquote className="text-lg lg:text-xl text-gray-700 leading-relaxed italic mb-3">
+                        "{expandedReviews.has(review.id) ? review.text : truncateText(review.text)}"
+                      </blockquote>
+                      {review.text.length > 150 && (
+                        <button
+                          onClick={() => toggleReviewExpansion(review.id)}
+                          className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors duration-200"
+                        >
+                          {expandedReviews.has(review.id) ? 'Show Less' : 'Show More'}
+                        </button>
+                      )}
+                    </div>
                     
                     {/* Reviewer Info */}
                     <div className="flex items-center justify-center space-x-3">
-                      <div className="text-3xl">{review.avatar}</div>
                       <div className="text-left">
-                        <h4 className="font-bold text-blue-950 text-base">{review.name}</h4>
-                        <p className="text-blue-600 text-sm">{review.company}</p>
+                        <h4 className="font-bold text-blue-950 text-base">{review.author_name}</h4>
                       </div>
                     </div>
                   </div>
@@ -276,6 +348,7 @@ const Reviews = () => {
             </svg>
           </button>
         </div>
+        )}
       </div>
     </section>
   );
