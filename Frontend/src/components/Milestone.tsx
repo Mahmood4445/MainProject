@@ -58,29 +58,32 @@ const Milestone = () => {
           {milestones.map((milestone, index) => (
             <div
               key={index}
-              className="text-center group"
+              className="text-center group flex flex-col h-full cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >
               {/* Year */}
-              <div className="mb-3">
-                <span className="bg-yellow-400 text-blue-950 px-3 py-1 rounded-full text-xs font-bold">
+              <div className="mb-3 flex-shrink-0">
+                <span className="bg-yellow-400 text-blue-950 px-3 py-1 rounded-full text-xs font-bold transition-all duration-300 group-hover:bg-yellow-300 group-hover:shadow-lg group-hover:scale-110">
                   {milestone.year}
                 </span>
               </div>
               
-              {/* Colored Line */}
-              <div className={`w-16 h-1 bg-gradient-to-r ${milestone.color} mx-auto mb-4 rounded-full transition-all duration-300 group-hover:w-20`}></div>
+              {/* Title - Fixed height for alignment */}
+              <div className="h-12 mb-3 flex items-center justify-center">
+                <h3 className="text-sm font-bold text-blue-950 leading-tight px-1 transition-all duration-300 group-hover:text-blue-600 group-hover:scale-105">
+                  {milestone.title}
+                </h3>
+              </div>
               
-              {/* Title */}
-              <h3 className="text-sm font-bold text-blue-950 mb-3 leading-tight px-1">
-                {milestone.title}
-              </h3>
+              {/* Description - Fixed height for alignment */}
+              <div className="h-16 flex items-center justify-center">
+                <p className="text-xs text-gray-700 leading-relaxed px-1 transition-all duration-300 group-hover:text-gray-800 group-hover:scale-105">
+                  {milestone.description}
+                </p>
+              </div>
               
-              {/* Description */}
-              <p className="text-xs text-gray-700 mb-4 leading-relaxed px-1">
-                {milestone.description}
-              </p>
+
             </div>
           ))}
         </div>

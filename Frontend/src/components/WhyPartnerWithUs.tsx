@@ -97,9 +97,7 @@ const WhyPartnerWithUs = () => {
             Why Partner With Us
           </h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto leading-relaxed">
-            We offer a dynamic workforce and a transparent work model that ensures trust and efficiency in every interaction. 
-            Our competitive pricing strategy is designed to deliver maximum value, supported by a robust customer support system 
-            and a dedicated account manager for personalized service.
+            End-to-end travel solutions with smart technology, competitive pricing, and customer-first support.
           </p>
         </div>
 

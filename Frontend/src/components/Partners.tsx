@@ -18,7 +18,7 @@ const Partners = () => {
       <div className="px-4 sm:px-6 lg:px-8 xl:px-12 max-w-7xl mx-auto">
         <div className="text-center mb-8" data-aos="fade-up">
           <h2 className="text-5xl sm:text-6xl font-bold text-blue-950 mb-6">Accreditation and Compliance</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">Trusted by leading airlines and travel agencies worldwide</p>
+          <p className="text-lg text-gray-600 max-w-3xl mx-auto">Globally accredited, secure, and compliant travel services with trusted industry certifications.</p>
         </div>
         
         {/* Partners Logo Scroll - Clean Logo Display */}
