@@ -1,6 +1,20 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
+import environ, os
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
+
+HITPAY_API_KEY = env("HITPAY_API_KEY")
+HITPAY_SALT = env("HITPAY_SALT")
+HITPAY_API_URL = env("HITPAY_API_URL")
+HITPAY_REDIRECT_URL = env("HITPAY_REDIRECT_URL")
+HITPAY_WEBHOOK_URL = env("HITPAY_WEBHOOK_URL")
+HITPAY_CURRENCY = env("HITPAY_CURRENCY", default="SGD")
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
@@ -75,8 +89,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React frontend
     "http://127.0.0.1:3000",
-    "http://localhost:8080",  # Alternative frontend port
+    "http://localhost:8081",  # Alternative frontend port
     "http://127.0.0.1:8080",
+    "http://localhost:5173",  # Vite frontend
+    "http://127.0.0.1:5173",
+    "http://localhost:8082",  # Vite frontend (current)
+    "http://127.0.0.1:8082",
 ]
 
 CORS_ALLOW_CREDENTIALS = True

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import ClickSpark from './ClickSpark';
+import PaymentModal from './PaymentModal';
 
 interface HeaderProps {
   activeSection?: string;
@@ -10,6 +11,7 @@ interface HeaderProps {
 const Header = ({ activeSection = 'home' }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -67,7 +69,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
             >
               <button
                 className="bg-yellow-300 text-blue-950 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-200 hover:shadow-lg transition-all duration-200"
-                onClick={() => window.open('https://your-payment-portal.com', '_blank')}
+                onClick={() => setIsPaymentModalOpen(true)}
               >
                 Payment
               </button>
@@ -135,6 +137,12 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/30 to-transparent animate-pulse"></div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal 
+        isOpen={isPaymentModalOpen}
+        onClose={() => setIsPaymentModalOpen(false)}
+      />
     </>
   );
 };
