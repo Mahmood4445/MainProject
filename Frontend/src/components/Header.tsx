@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X } from 'lucide-react';
 import ClickSpark from './ClickSpark';
-import PaymentModal from './PaymentModal';
+import GoEasyTripLogo from '@/assets/GoEasyTrip logo.png';
 
 interface HeaderProps {
   activeSection?: string;
@@ -11,7 +11,6 @@ interface HeaderProps {
 const Header = ({ activeSection = 'home' }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -50,30 +49,15 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
               easing="ease-out"
             >
               <div className="flex items-center ml-8 cursor-pointer">
-                <div className="text-2xl font-bold">
-                  <span className="text-blue-300">company</span>
-                  <span className="text-yellow-400">logo</span>
-                  <span className="text-blue-300"></span>
-                </div>
+                <img 
+                  src={GoEasyTripLogo} 
+                  alt="GoEasy Trip Logo" 
+                  className="h-28 w-auto object-contain"
+                />
               </div>
             </ClickSpark>
 
-            {/* Payment Button - Top Right */}
-            <ClickSpark
-              sparkColor="#ef4444"
-              sparkSize={6}
-              sparkRadius={15}
-              sparkCount={4}
-              duration={400}
-              easing="ease-in-out"
-            >
-              <button
-                className="bg-yellow-300 text-blue-950 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-yellow-200 hover:shadow-lg transition-all duration-200"
-                onClick={() => setIsPaymentModalOpen(true)}
-              >
-                Payment
-              </button>
-            </ClickSpark>
+
 
             {/* Desktop Navigation - Centered */}
             <nav className="hidden lg:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
@@ -138,11 +122,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/30 to-transparent animate-pulse"></div>
       </div>
 
-      {/* Payment Modal */}
-      <PaymentModal 
-        isOpen={isPaymentModalOpen}
-        onClose={() => setIsPaymentModalOpen(false)}
-      />
+
     </>
   );
 };

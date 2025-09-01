@@ -103,14 +103,14 @@ const WhyPartnerWithUs = () => {
 
         {/* Main Content Grid */}
         <div className="w-3/4 mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+          <div className="grid grid-cols-3 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-4 hover:bg-blue-100 hover:scale-105 transition-all duration-300 cursor-pointer group h-20 flex items-center justify-center"
+                className="bg-white/80 backdrop-blur-sm border border-gray-200 rounded-lg p-2 md:p-4 hover:bg-blue-100 hover:scale-105 transition-all duration-300 cursor-pointer group h-24 md:h-20 flex items-center justify-center"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <h4 className="text-base font-medium text-blue-950 group-hover:text-blue-600 transition-all duration-300 text-center leading-tight">
+                <h4 className="text-xs md:text-base font-medium text-blue-950 group-hover:text-blue-600 transition-all duration-300 text-center leading-tight">
                   {feature.title}
                 </h4>
               </div>

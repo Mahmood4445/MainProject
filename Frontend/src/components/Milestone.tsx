@@ -54,11 +54,11 @@ const Milestone = () => {
         </div>
 
         {/* Milestones Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 lg:gap-4">
+        <div className="flex md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-6 lg:gap-4 overflow-x-auto md:overflow-x-visible [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {milestones.map((milestone, index) => (
             <div
               key={index}
-              className="text-center group flex flex-col h-full cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2"
+              className="text-center group flex flex-col h-full cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-2 flex-shrink-0 w-64 md:w-auto"
               data-aos="fade-up"
               data-aos-delay={index * 100}
             >

@@ -96,9 +96,9 @@ const WhoWeAre = () => {
         </div>
 
         {/* Cards Grid with TiltedCard and Magnet Effect */}
-        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20">
+        <div className="flex md:grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-20 overflow-x-auto md:overflow-x-visible [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {cards.map((card, index) => (
-            <div key={index} data-aos="fade-up" data-aos-delay={index * 200}>
+            <div key={index} data-aos="fade-up" data-aos-delay={index * 200} className="flex-shrink-0 w-80 md:w-auto">
               <Magnet 
                 padding={80} 
                 disabled={false} 
