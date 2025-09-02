@@ -1,23 +1,15 @@
 import os
 from pathlib import Path
-from dotenv import load_dotenv
-import environ, os
-from pathlib import Path
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env()
-environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
-
-HITPAY_API_KEY = env("HITPAY_API_KEY")
-HITPAY_SALT = env("HITPAY_SALT")
-HITPAY_API_URL = env("HITPAY_API_URL")
-HITPAY_REDIRECT_URL = env("HITPAY_REDIRECT_URL")
-HITPAY_WEBHOOK_URL = env("HITPAY_WEBHOOK_URL")
-HITPAY_CURRENCY = env("HITPAY_CURRENCY", default="SGD")
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv()
+
+
+
+
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 SECRET_KEY = 'django-insecure-your-secret-key'
 DEBUG = True

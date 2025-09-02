@@ -12,7 +12,7 @@ import FutureOutlook from '@/components/FutureOutlook';
 import Partners from '@/components/Partners';
 import Footer from '@/components/Footer';
 import ScrollToTop from '@/components/ScrollToTop';
-import ScrollProgress from '@/components/ScrollProgress';
+
 import ClickSpark from '@/components/ClickSpark';
 
 
@@ -121,7 +121,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 scroll-smooth">
       <Header activeSection={activeSection} />
-      <ScrollProgress />
+
       <ClickSpark
         sparkColor="#10b981"
         sparkSize={10}

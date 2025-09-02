@@ -222,39 +222,48 @@
 
   /* Custom scrollbar for horizontal sections */
   .custom-scrollbar::-webkit-scrollbar {
-    height: 6px;
+    height: 0px;
+    display: none;
   }
 
   .custom-scrollbar::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
-    border-radius: 3px;
+    display: none;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary));
-    border-radius: 3px;
+    display: none;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--primary-deep));
+    display: none;
+  }
+
+  /* Hide all scrollbars globally */
+  * {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+  }
+
+  *::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
   }
 
   /* Enhanced scrollbar for main content */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 0px;
+    display: none;
   }
 
   ::-webkit-scrollbar-track {
-    background: hsl(var(--muted));
+    display: none;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: hsl(var(--primary));
-    border-radius: 4px;
+    display: none;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: hsl(var(--primary-deep));
+    display: none;
   }
 
   /* Section spacing for better single-page flow */

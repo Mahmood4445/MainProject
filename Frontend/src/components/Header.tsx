@@ -10,21 +10,8 @@ interface HeaderProps {
 
 const Header = ({ activeSection = 'home' }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
 
-  useEffect(() => {
-    const updateScrollProgress = () => {
-      const scrollTop = window.scrollY;
-      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-      const progress = (scrollTop / docHeight) * 100;
-      setScrollProgress(progress);
-    };
 
-    window.addEventListener('scroll', updateScrollProgress);
-    updateScrollProgress(); // Initial call
-
-    return () => window.removeEventListener('scroll', updateScrollProgress);
-  }, []);
 
   const navItems = [
     { name: 'About', href: '#who-we-are', id: 'who-we-are' },
@@ -36,7 +23,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-50 bg-blue-950/95 backdrop-blur-md border-b border-blue-800 shadow-lg">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-blue-50/95 backdrop-blur-md border-b border-blue-200 shadow-lg">
         <div className="w-full px-4 md:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
@@ -67,8 +54,8 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
                   href={item.href}
                   className={`transition-all duration-300 font-medium px-3 py-2 rounded-lg ${
                     activeSection === item.id
-                      ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20'
-                      : 'text-white hover:text-yellow-400 hover:bg-white/5'
+                      ? 'text-blue-600 bg-blue-100 border border-blue-300'
+                      : 'text-blue-950 hover:text-blue-600 hover:bg-blue-100'
                   }`}
                 >
                   {item.name}
@@ -82,7 +69,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-white hover:text-yellow-400 hover:bg-white/5"
+                className="text-blue-950 hover:text-blue-600 hover:bg-blue-100"
               >
                 {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </Button>
@@ -91,7 +78,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
 
           {/* Mobile Navigation */}
           {isMenuOpen && (
-            <div className="lg:hidden py-4 px-4 border-t border-blue-800 bg-blue-950/95 backdrop-blur-md">
+            <div className="lg:hidden py-4 px-4 border-t border-blue-200 bg-blue-50/95 backdrop-blur-md">
               <nav className="flex flex-col space-y-2">
                 {navItems.map((item) => (
                   <a
@@ -99,8 +86,8 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
                     href={item.href}
                     className={`transition-all duration-300 font-medium px-3 py-2 rounded-lg ${
                       activeSection === item.id
-                        ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20'
-                        : 'text-white hover:text-yellow-400 hover:bg-white/5'
+                        ? 'text-blue-600 bg-blue-100 border border-blue-300'
+                        : 'text-blue-950 hover:text-blue-600 hover:bg-blue-100'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
@@ -113,14 +100,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
         </div>
       </header>
       
-      {/* Increment Line Below Header - Now Shows Scroll Progress */}
-      <div className="fixed top-16 left-0 right-0 z-40 bg-slate-900/30 h-1 shadow-lg">
-        <div 
-          className="h-full bg-gradient-to-r from-cyan-400 via-yellow-300 to-pink-400 transition-all duration-150 ease-out shadow-lg shadow-cyan-400/50"
-          style={{ width: `${scrollProgress}%` }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-200/30 to-transparent animate-pulse"></div>
-      </div>
+
 
 
     </>
