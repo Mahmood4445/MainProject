@@ -10,6 +10,21 @@ interface HeaderProps {
 
 const Header = ({ activeSection = 'home' }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
+
+  useEffect(() => {
+    const updateScrollProgress = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      setScrollProgress(progress);
+    };
+
+    window.addEventListener('scroll', updateScrollProgress);
+    updateScrollProgress(); // Initial call
+
+    return () => window.removeEventListener('scroll', updateScrollProgress);
+  }, []);
 
 
 
@@ -100,8 +115,14 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
         </div>
       </header>
       
-
-
+      {/* Yellow Scroll Progress Bar Below Header */}
+      <div className="fixed top-16 left-0 right-0 z-40 bg-gray-200/30 h-1 shadow-lg">
+        <div 
+          className="h-full bg-yellow-400 transition-all duration-150 ease-out shadow-lg shadow-yellow-400/50"
+          style={{ width: `${scrollProgress}%` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent animate-pulse"></div>
+      </div>
 
     </>
   );
