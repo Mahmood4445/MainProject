@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-your-secret-key'
 DEBUG = False
-ALLOWED_HOSTS = [ '13.211.150.252']
+ALLOWED_HOSTS = [ '3.25.51.99']
 STATIC_ROOT = BASE_DIR / 'static'
 
 INSTALLED_APPS = [
