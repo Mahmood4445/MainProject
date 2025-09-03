@@ -1,104 +1,67 @@
-/* Import enhanced animations */
-@import './styles/animations.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* GoEasyTrip Design System - Travel Technology Theme */
-
 @layer base {
   :root {
-    /* Travel Tech Blue Theme */
     --background: 0 0% 100%;
     --foreground: 223 47% 11%;
-
     --card: 0 0% 100%;
     --card-foreground: 223 47% 11%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 223 47% 11%;
-
-    /* Deep Blue Primary - Travel Tech Brand */
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-deep: 225 100% 35%;
     --primary-light: 217 100% 80%;
-
-    /* Gold Accent for CTAs */
     --accent: 48 100% 50%;
     --accent-foreground: 223 47% 11%;
     --accent-light: 48 100% 85%;
-
     --secondary: 210 40% 96%;
     --secondary-foreground: 223 47% 11%;
-
     --muted: 210 40% 96%;
     --muted-foreground: 215 16% 47%;
-
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 214 32% 91%;
     --input: 214 32% 91%;
     --ring: 217 91% 60%;
-
     --radius: 0.75rem;
-
-    /* Travel Tech Gradients */
     --gradient-primary: linear-gradient(135deg, hsl(225 100% 35%), hsl(217 91% 60%));
     --gradient-hero: linear-gradient(180deg, hsl(225 100% 35%), hsl(217 91% 60%));
     --gradient-accent: linear-gradient(135deg, hsl(48 100% 50%), hsl(45 100% 55%));
-    
-    /* Shadows and Effects */
     --shadow-primary: 0 10px 40px -10px hsl(217 91% 60% / 0.3);
     --shadow-card: 0 4px 25px -5px hsl(217 91% 60% / 0.1);
     --shadow-accent: 0 8px 30px -8px hsl(48 100% 50% / 0.3);
-
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
   .dark {
     --background: 223 47% 11%;
     --foreground: 0 0% 100%;
-
     --card: 223 47% 11%;
     --card-foreground: 0 0% 100%;
-
     --popover: 223 47% 11%;
     --popover-foreground: 0 0% 100%;
-
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
     --primary-deep: 225 100% 25%;
     --primary-light: 217 100% 70%;
-
     --accent: 48 100% 50%;
     --accent-foreground: 223 47% 11%;
-
     --secondary: 225 39% 21%;
     --secondary-foreground: 0 0% 100%;
-
     --muted: 225 39% 21%;
     --muted-foreground: 215 20% 65%;
-
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 100%;
-
     --border: 225 39% 21%;
     --input: 225 39% 21%;
     --ring: 217 91% 60%;
@@ -111,144 +74,37 @@
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
-}
 
-@layer base {
   * {
-    @apply border-border;
+    border-color: hsl(var(--border));
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
-    /* Enhanced smooth scrolling */
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
     overflow-x: hidden;
   }
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 80px; /* Account for fixed header */
-    /* Prevent horizontal scroll */
+    scroll-padding-top: 80px;
     overflow-x: hidden;
   }
 
-  /* Enhanced single-page scrolling experience */
-  @media (prefers-reduced-motion: no-preference) {
-    html {
-      scroll-behavior: smooth;
-    }
-    
-    /* Enhanced scroll animations */
-    * {
-      scroll-behavior: smooth;
-    }
-    
-    /* Smooth transitions for all interactive elements */
-    a, button, .transition-all {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    
-    /* Parallax effect for sections */
-    section {
-      transform: translateZ(0);
-      will-change: transform;
-    }
-    
-    /* Smooth scroll for all sections */
-    section[id] {
-      scroll-margin-top: 80px;
-      /* Add subtle entrance animation */
-      opacity: 0;
-      transform: translateY(20px);
-      animation: fadeInUp 0.8s ease-out forwards;
-    }
-    
-    /* Enhanced hover effects for navigation */
-    nav a {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    nav a::after {
-      content: '';
-      position: absolute;
-      bottom: -2px;
-      left: 0;
-      width: 0;
-      height: 2px;
-      background: currentColor;
-      transition: width 0.3s ease;
-    }
-    
-    nav a:hover::after {
-      width: 100%;
-    }
-
-    /* Active navigation indicator */
-    nav a.active {
-      color: hsl(var(--accent));
-    }
-
-    nav a.active::after {
-      width: 100%;
-      background: hsl(var(--accent));
-    }
-
-    /* Smooth section transitions */
-    .section-transition {
-      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    /* Enhanced scroll indicator */
-    .scroll-indicator {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--primary)));
-      transform-origin: left;
-      z-index: 9999;
-    }
-  }
-
-  /* Animation keyframes */
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Custom scrollbar for horizontal sections */
-  .custom-scrollbar::-webkit-scrollbar {
-    height: 0px;
-    display: none;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    display: none;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    display: none;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    display: none;
-  }
-
-  /* Hide all scrollbars globally */
+  /* Hide scrollbars globally */
   * {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
   }
 
   *::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Opera */
+    display: none;
   }
 
-  /* Enhanced scrollbar for main content */
   ::-webkit-scrollbar {
     width: 0px;
     display: none;
@@ -265,22 +121,149 @@
   ::-webkit-scrollbar-thumb:hover {
     display: none;
   }
+}
 
-  /* Section spacing for better single-page flow */
-  section {
-    position: relative;
-    overflow: hidden;
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-
-  /* Ensure proper spacing between sections */
-  section + section {
-    margin-top: 0;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
+}
 
-  /* Enhanced focus states for accessibility */
-  a:focus-visible,
-  button:focus-visible {
-    outline: 2px solid hsl(var(--accent));
-    outline-offset: 2px;
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-left {
+  animation: fadeInLeft 0.6s ease-out;
+}
+
+.animate-fade-in-right {
+  animation: fadeInRight 0.6s ease-out;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s ease-out;
+}
+
+.animate-slide-in-top {
+  animation: slideInFromTop 0.6s ease-out;
+}
+
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.hover-glow {
+  transition: box-shadow 0.3s ease;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+* {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.focus-visible:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto;
   }
 }
