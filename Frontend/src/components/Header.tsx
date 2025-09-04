@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { CreditCard } from 'lucide-react';
 import ClickSpark from './ClickSpark';
+import PaymentModal from './PaymentModal';
 import GoEasyTripLogo from '@/assets/GoEasyTrip logo.png';
 
 interface HeaderProps {
@@ -9,8 +10,8 @@ interface HeaderProps {
 }
 
 const Header = ({ activeSection = 'home' }: HeaderProps) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
   useEffect(() => {
     const updateScrollProgress = () => {
@@ -26,8 +27,6 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
     return () => window.removeEventListener('scroll', updateScrollProgress);
   }, []);
 
-
-
   const navItems = [
     { name: 'About', href: '#who-we-are', id: 'who-we-are' },
     { name: 'Services', href: '#services', id: 'services' },
@@ -41,7 +40,7 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
       <header className="fixed top-0 left-0 right-0 z-50 bg-blue-50/95 backdrop-blur-md border-b border-blue-200 shadow-lg">
         <div className="w-full px-4 md:px-8">
           <div className="flex items-center justify-between h-16">
-            {/* Logo */}
+            {/* Logo - Smaller on mobile, larger on desktop */}
             <ClickSpark
               sparkColor="#fbbf24"
               sparkSize={8}
@@ -50,16 +49,14 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
               duration={500}
               easing="ease-out"
             >
-              <div className="flex items-center ml-8 cursor-pointer">
+              <div className="flex items-center cursor-pointer">
                 <img 
                   src={GoEasyTripLogo} 
                   alt="GoEasy Trip Logo" 
-                  className="h-28 w-auto object-contain"
+                  className="h-16 md:h-28 w-auto object-contain"
                 />
               </div>
             </ClickSpark>
-
-
 
             {/* Desktop Navigation - Centered */}
             <nav className="hidden lg:flex items-center space-x-6 absolute left-1/2 transform -translate-x-1/2">
@@ -78,40 +75,28 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
               ))}
             </nav>
 
-            {/* Mobile menu button */}
+            {/* Desktop Payment Button */}
+            <div className="hidden lg:flex items-center">
+              <Button
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
+              >
+                <CreditCard size={18} />
+                <span>Payment</span>
+              </Button>
+            </div>
+
+            {/* Mobile Payment Button */}
             <div className="lg:hidden">
               <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="text-blue-950 hover:text-blue-600 hover:bg-blue-100"
+                onClick={() => setIsPaymentModalOpen(true)}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-3 py-2 rounded-lg transition-all duration-300 flex items-center space-x-2 shadow-lg hover:shadow-xl"
               >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                <CreditCard size={16} />
+                <span className="text-sm">Payment</span>
               </Button>
             </div>
           </div>
-
-          {/* Mobile Navigation */}
-          {isMenuOpen && (
-            <div className="lg:hidden py-4 px-4 border-t border-blue-200 bg-blue-50/95 backdrop-blur-md">
-              <nav className="flex flex-col space-y-2">
-                {navItems.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className={`transition-all duration-300 font-medium px-3 py-2 rounded-lg ${
-                      activeSection === item.id
-                        ? 'text-blue-600 bg-blue-100 border border-blue-300'
-                        : 'text-blue-950 hover:text-blue-600 hover:bg-blue-100'
-                    }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          )}
         </div>
       </header>
       
@@ -123,6 +108,12 @@ const Header = ({ activeSection = 'home' }: HeaderProps) => {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-300/30 to-transparent animate-pulse"></div>
       </div>
+
+      {/* Payment Modal */}
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onClose={() => setIsPaymentModalOpen(false)} 
+      />
 
     </>
   );

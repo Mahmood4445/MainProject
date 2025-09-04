@@ -15,27 +15,67 @@ import ScrollToTop from '@/components/ScrollToTop';
 
 import ClickSpark from '@/components/ClickSpark';
 
-
 const Index = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
+    // Optimized AOS initialization
     AOS.init({
-      duration: 1000,
-      easing: 'ease-out-cubic',
+      duration: 800,
+      easing: 'ease-out',
       once: true,
-      offset: 120,
-      delay: 100,
+      offset: 100,
+      delay: 50,
     });
 
-    // Enhanced smooth scrolling for anchor links
+    // Throttled scroll handler for better performance
+    let ticking = false;
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const sections = ['home', 'who-we-are', 'services', 'reviews', 'milestone', 'why-partner', 'future-outlook', 'partners'];
+          const headerHeight = 80;
+          const scrollPosition = window.scrollY + headerHeight + 100;
+          
+          let currentSection = 'home';
+          
+          for (let i = 0; i < sections.length; i++) {
+            const section = document.getElementById(sections[i]);
+            if (section) {
+              const rect = section.getBoundingClientRect();
+              const sectionTop = rect.top + window.pageYOffset;
+              const sectionBottom = sectionTop + rect.height;
+              
+              if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
+                if (sections[i] === 'why-partner') {
+                  currentSection = 'partners';
+                } else if (sections[i] === 'home') {
+                  currentSection = 'none';
+                } else {
+                  currentSection = sections[i];
+                }
+                break;
+              }
+            }
+          }
+          
+          if (currentSection !== activeSection) {
+            setActiveSection(currentSection);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    // Optimized smooth scrolling
     const handleSmoothScroll = (e: Event) => {
       const target = e.target as HTMLAnchorElement;
       if (target.hash) {
         e.preventDefault();
         const element = document.querySelector(target.hash);
         if (element) {
-          const headerHeight = 80; // Adjusted header height
+          const headerHeight = 80;
           const elementPosition = element.getBoundingClientRect().top + window.pageYOffset - headerHeight;
           
           window.scrollTo({
@@ -46,68 +86,13 @@ const Index = () => {
       }
     };
 
-    // Active section detection
-    const handleScroll = () => {
-      const sections = ['home', 'who-we-are', 'services', 'reviews', 'milestone', 'why-partner', 'future-outlook', 'partners'];
-      const headerHeight = 80;
-      
-      // Get current scroll position
-      const scrollPosition = window.scrollY + headerHeight + 150;
-      
-      // Find which section is currently active
-      let currentSection = 'home';
-      
-      // Debug: Log all section positions
-      if (window.scrollY > 0) {
-        console.log('Current scroll position:', window.scrollY);
-        sections.forEach(sectionId => {
-          const section = document.getElementById(sectionId);
-          if (section) {
-            const rect = section.getBoundingClientRect();
-            const sectionTop = rect.top + window.pageYOffset;
-            const sectionBottom = sectionTop + rect.height;
-            console.log(`${sectionId}: top=${sectionTop}, bottom=${sectionBottom}, visible=${scrollPosition >= sectionTop && scrollPosition < sectionBottom}`);
-          }
-        });
-      }
-      
-      for (let i = 0; i < sections.length; i++) {
-        const section = document.getElementById(sections[i]);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          const sectionTop = rect.top + window.pageYOffset;
-          const sectionBottom = sectionTop + rect.height;
-          
-          // Check if current scroll position is within this section
-          if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-            // Special case: When in "Why Partner With Us" section, show "Partners" as active
-            if (sections[i] === 'why-partner') {
-              currentSection = 'partners';
-            } else if (sections[i] === 'home') {
-              // When in Hero section, don't highlight any navigation item
-              currentSection = 'none';
-            } else {
-              currentSection = sections[i];
-            }
-            break;
-          }
-        }
-      }
-      
-      // Only update if the section actually changed
-      if (currentSection !== activeSection) {
-        console.log('Section changed from', activeSection, 'to', currentSection, 'at scroll position:', scrollPosition);
-        setActiveSection(currentSection);
-      }
-    };
-
     // Add event listeners
     const anchorLinks = document.querySelectorAll('a[href^="#"]');
     anchorLinks.forEach(link => {
       link.addEventListener('click', handleSmoothScroll);
     });
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll(); // Initial check
 
     return () => {
@@ -119,40 +104,40 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 scroll-smooth">
+    <div className="min-h-screen bg-gray-50">
       <Header activeSection={activeSection} />
 
       <ClickSpark
         sparkColor="#10b981"
-        sparkSize={10}
-        sparkRadius={25}
-        sparkCount={8}
-        duration={600}
+        sparkSize={8}
+        sparkRadius={20}
+        sparkCount={6}
+        duration={500}
         easing="ease-out"
       >
-        <main className="overflow-x-hidden snap-y snap-mandatory">
-          <section id="home" className="snap-start">
+        <main className="overflow-x-hidden">
+          <section id="home">
             <Hero />
           </section>
-          <section id="who-we-are" className="snap-start">
+          <section id="who-we-are">
             <WhoWeAre />
           </section>
-          <section id="services" className="snap-start">
+          <section id="services">
             <Services />
           </section>
-          <section id="reviews" className="snap-start">
+          <section id="reviews">
             <Reviews />
           </section>
-          <section id="milestone" className="snap-start">
+          <section id="milestone">
             <Milestone />
           </section>
-          <section id="why-partner" className="snap-start">
+          <section id="why-partner">
             <WhyPartnerWithUs />
           </section>
-          <section id="future-outlook" className="snap-start">
+          <section id="future-outlook">
             <FutureOutlook />
           </section>
-          <section id="partners" className="snap-start">
+          <section id="partners">
             <Partners />
           </section>
         </main>

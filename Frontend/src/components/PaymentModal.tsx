@@ -15,6 +15,7 @@ interface PaymentFormData {
   email: string;
   amount: string;
   currency: string;
+  purpose: string;
 }
 
 const PaymentModal = ({ isOpen, onClose }: PaymentModalProps) => {
@@ -22,7 +23,8 @@ const PaymentModal = ({ isOpen, onClose }: PaymentModalProps) => {
     name: '',
     email: '',
     amount: '',
-    currency: 'SGD'
+    currency: 'SGD',
+    purpose: ''
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,24 +40,57 @@ const PaymentModal = ({ isOpen, onClose }: PaymentModalProps) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Payment submitted:', formData);
+      // Prepare payment data
+      const paymentData = {
+        name: formData.name,
+        email: formData.email,
+        amount: parseFloat(formData.amount),
+        currency: formData.currency,
+        purpose: formData.purpose,
+        payment_methods: ['paynow_online', 'card', 'wechat', 'alipay', 'grabpay', 'fave_duit', 'shopback', 'atome'],
+        reference_number: `REF-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+        redirect_url: `${window.location.origin}/payment-callback`,
+        webhook: `${window.location.origin}/api/payment-webhook`,
+        allow_repeated_payments: false
+      };
+
+      // Make API call to backend
+      const response = await fetch('/api/payments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log('Payment created successfully:', result);
       
       // Reset form
       setFormData({
         name: '',
         email: '',
         amount: '',
-        currency: 'SGD'
+        currency: 'SGD',
+        purpose: ''
       });
       
       // Close modal
       onClose();
       
-      // Show success message (you can replace this with a toast notification)
-      alert('Payment submitted successfully!');
+      // Show success message
+      alert('Payment request created successfully! You will be redirected to the payment gateway.');
+      
+      // Redirect to payment gateway if URL is provided
+      if (result.payment_url) {
+        window.open(result.payment_url, '_blank');
+      }
+      
     } catch (error) {
       console.error('Payment error:', error);
       alert('Payment failed. Please try again.');
@@ -166,6 +201,22 @@ const PaymentModal = ({ isOpen, onClose }: PaymentModalProps) => {
                 <SelectItem value="MYR">MYR - Malaysian Ringgit</SelectItem>
               </SelectContent>
             </Select>
+          </div>
+
+          {/* Purpose Field */}
+          <div className="space-y-2">
+            <Label htmlFor="purpose" className="text-sm font-medium text-gray-700">
+              Purpose
+            </Label>
+            <Input
+              id="purpose"
+              type="text"
+              placeholder="Enter payment purpose (e.g., FIFA 16, Travel Package)"
+              value={formData.purpose}
+              onChange={(e) => handleInputChange('purpose', e.target.value)}
+              required
+              className="w-full"
+            />
           </div>
 
           {/* Submit Buttons */}
