@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manual Payment Status Update</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; }
+        input, select { padding: 8px; margin: 5px; width: 200px; }
+        .form-group { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Manual Payment Status Update Tool</h1>
+    
+    <div class="form-group">
+        <label>Reference Number:</label><br>
+        <input type="text" id="referenceNumber" placeholder="Enter reference number">
+    </div>
+    
+    <div class="form-group">
+        <label>New Status:</label><br>
+        <select id="newStatus">
+            <option value="completed">Completed</option>
+            <option value="failed">Failed</option>
+            <option value="pending">Pending</option>
+        </select>
+    </div>
+    
+    <div class="form-group">
+        <button onclick="checkStatus()">Check Current Status</button>
+        <button onclick="updateStatus()">Update Status</button>
+    </div>
+    
+    <div id="result"></div>
+
+    <script>
+        async function checkStatus() {
+            const referenceNumber = document.getElementById('referenceNumber').value;
+            if (!referenceNumber) {
+                alert('Please enter a reference number');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Checking status...</div>';
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/payments/status/${referenceNumber}/`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Current Status: <strong>${data.status}</strong><br>
+                            Reference: ${data.reference_number}<br>
+                            Amount: ${data.amount} ${data.currency}<br>
+                            Created: ${new Date(data.created_at).toLocaleString()}<br>
+                            ${data.paid_at ? `Paid: ${new Date(data.paid_at).toLocaleString()}` : ''}
+                        </div>
+                    `;
+                } else {
+                    const error = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Status check failed: ${error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function updateStatus() {
+            const referenceNumber = document.getElementById('referenceNumber').value;
+            const newStatus = document.getElementById('newStatus').value;
+            
+            if (!referenceNumber) {
+                alert('Please enter a reference number');
+                return;
+            }
+            
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Updating status...</div>';
+            
+            try {
+                const response = await fetch(`http://localhost:8000/api/payments/update-status/${referenceNumber}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        status: newStatus
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Status updated successfully!<br>
+                            Reference: ${data.reference_number}<br>
+                            New Status: <strong>${data.status}</strong><br>
+                            <br>
+                            <button onclick="checkStatus()">Check Updated Status</button>
+                        </div>
+                    `;
+                } else {
+                    const error = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Status update failed: ${error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

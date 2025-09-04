@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Payment Redirect Flow</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 20px; margin: 5px; }
+        .redirect-url { background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Test Payment Redirect Flow</h1>
+    <button onclick="testPayment()">Create Test Payment</button>
+    <button onclick="testRedirect()">Test Redirect URL</button>
+    <div id="result"></div>
+
+    <script>
+        async function testPayment() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result info">Creating test payment...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/payments/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: "Test User",
+                        email: "test@example.com",
+                        amount: 10.00,
+                        currency: "SGD",
+                        purpose: "Redirect Test"
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const redirectUrl = `http://localhost:8080/payment/status?reference_number=${data.reference_number}`;
+                    
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Payment created successfully!<br>
+                            <strong>Reference Number:</strong> ${data.reference_number}<br>
+                            <strong>Checkout URL:</strong> <a href="${data.checkout_url}" target="_blank">${data.checkout_url}</a><br>
+                            <br>
+                            <div class="redirect-url">
+                                <strong>🔗 Redirect URL (after payment):</strong><br>
+                                <a href="${redirectUrl}" target="_blank">${redirectUrl}</a>
+                            </div>
+                            <br>
+                            <button onclick="window.open('${data.checkout_url}', '_blank')">Open HitPay Checkout</button>
+                            <button onclick="window.open('${redirectUrl}', '_blank')">Test Redirect URL</button>
+                        </div>
+                    `;
+                } else {
+                    const error = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Payment failed: ${response.status}<br>
+                            Error: ${error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        function testRedirect() {
+            const resultDiv = document.getElementById('result');
+            const testUrl = 'http://localhost:8080/payment/status?reference_number=test-123';
+            
+            resultDiv.innerHTML = `
+                <div class="result info">
+                    🔗 Testing redirect URL...<br>
+                    <a href="${testUrl}" target="_blank">${testUrl}</a><br>
+                    <br>
+                    <button onclick="window.open('${testUrl}', '_blank')">Open Redirect URL</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

@@ -1,6 +1,16 @@
 import os
 from pathlib import Path
+from dotenv import load_dotenv
 
+# Load environment variables from .env file
+load_dotenv()
+
+# HitPay Configuration
+HITPAY_API_KEY = os.getenv("HITPAY_API_KEY")
+HITPAY_SALT = os.getenv("HITPAY_SALT")
+HITPAY_API_BASE = os.getenv("HITPAY_API_BASE", "https://api.sandbox.hit-pay.com/v1")
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+PUBLIC_BACKEND_URL = os.getenv("PUBLIC_BACKEND_URL", "http://localhost:8000")
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

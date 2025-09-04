@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test HitPay API</title>
+</head>
+<body>
+    <h1>Test HitPay Payment API</h1>
+    <button onclick="testPayment()">Test Payment Creation</button>
+    <div id="result"></div>
+
+    <script>
+        async function testPayment() {
+            const testData = {
+                name: "John Doe",
+                email: "john@example.com",
+                amount: 10.00,
+                currency: "SGD",
+                purpose: "Test Payment",
+                phone: "+6598765432"
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/api/payments/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                const result = await response.json();
+                console.log('API Response:', result);
+                
+                document.getElementById('result').innerHTML = `
+                    <h3>Response:</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                    ${result.checkout_url ? `<p><a href="${result.checkout_url}" target="_blank">Click here to go to HitPay</a></p>` : ''}
+                `;
+
+                if (result.checkout_url) {
+                    // Test redirect
+                    console.log('Attempting redirect to:', result.checkout_url);
+                    window.open(result.checkout_url, '_blank');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('result').innerHTML = `<p style="color: red;">Error: ${error.message}</p>`;
+            }
+        }
+    </script>
+</body>
+</html>

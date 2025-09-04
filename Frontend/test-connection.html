@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Backend Connection</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 5px; }
+        .success { background-color: #d4edda; color: #155724; }
+        .error { background-color: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test Backend Connection</h1>
+    <button onclick="testConnection()">Test Connection</button>
+    <button onclick="testPayment()">Test Payment Creation</button>
+    <div id="result"></div>
+
+    <script>
+        async function testConnection() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result">Testing connection...</div>';
+            
+            try {
+                const response = await fetch('http://localhost:8000/api/payments/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: "Test User",
+                        email: "test@example.com",
+                        amount: 10.00,
+                        currency: "SGD",
+                        purpose: "Connection Test"
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Connection successful!<br>
+                            Checkout URL: ${data.checkout_url}<br>
+                            Reference: ${data.reference_number}
+                        </div>
+                    `;
+                } else {
+                    const error = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Connection failed: ${response.status}<br>
+                            Error: ${error}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Connection error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testPayment() {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<div class="result">Creating test payment...</div>';
+            
+            try {
+                const startTime = Date.now();
+                const response = await fetch('http://localhost:8000/api/payments/create/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: "Test User",
+                        email: "test@example.com",
+                        amount: 10.00,
+                        currency: "SGD",
+                        purpose: "Performance Test"
+                    })
+                });
+                
+                const endTime = Date.now();
+                const duration = endTime - startTime;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            ✅ Payment created in ${duration}ms!<br>
+                            Checkout URL: ${data.checkout_url}<br>
+                            Reference: ${data.reference_number}<br>
+                            <button onclick="window.open('${data.checkout_url}', '_blank')">Open HitPay</button>
+                        </div>
+                    `;
+                } else {
+                    const error = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            ❌ Payment failed: ${response.status}<br>
+                            Error: ${error}<br>
+                            Duration: ${duration}ms
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        ❌ Payment error: ${error.message}
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
