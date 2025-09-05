@@ -124,7 +124,7 @@ class HitPayWebhookView(APIView):
             sorted_data = sorted(form_data.items())
             
             # Concatenate key=value pairs
-            concatenated_string = '&'.join([f"{key}={value}" for key, value in sorted_data])
+            concatenated_string = ''.join([f"{key}{value}" for key, value in sorted_data])
             
             # Compute HMAC-SHA256
             computed_hmac = hmac.new(
