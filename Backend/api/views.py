@@ -13,6 +13,7 @@ from rest_framework.views import APIView
 from .models import Review, Payment
 from .serializers import ReviewSerializer
 from django.utils import timezone
+import json
 
 # Reviews CRUD
 class ReviewListCreateView(generics.ListCreateAPIView):
@@ -62,7 +63,7 @@ class CreatePaymentRequestView(APIView):
                 'phone': phone,
                 'purpose': purpose,  # Add purpose parameter
                 'redirect_url': f"{settings.FRONTEND_URL}/payment/status?reference_number={payment.reference_number}",
-                'webhook': "https://webhook.site/your-webhook-url",  # Temporary for testing - replace with your webhook URL
+                'webhook': "https://goeasytrip.com/api/webhooks/hitpay",  # Temporary for testing - replace with your webhook URL
             }
             
             # HitPay API headers
@@ -110,9 +111,21 @@ class HitPayWebhookView(APIView):
     def post(self, request):
         try:
             # Get the HMAC from the request
+            
+
             received_hmac = request.POST.get('hmac')
+
+            # If no hmac in form-data, try JSON
+            if not received_hmac:
+                try:
+                    data = json.loads(request.body.decode("utf-8"))
+                    received_hmac = data.get("hmac")
+                except Exception:
+                    pass
+
             if not received_hmac:
                 return Response({'error': 'No HMAC provided'}, status=status.HTTP_400_BAD_REQUEST)
+
             
             # Get all form data except hmac
             form_data = {}
